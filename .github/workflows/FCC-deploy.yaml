@@ -1,0 +1,37 @@
+name: Deploy speific  React App on FCC ubuntu server
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Enter the tag version (e.g., 1.2.3) to build from without the v"
+        required: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: "v${{github.event.inputs.tag }}"
+
+      - name: Install Dependencies
+        run: npm install --force
+
+      - name: Build React App
+        run: npm run build
+
+      - name: Deploy to AWS Instance
+        env:
+          HOST: ${{ secrets.AWS_HOST }} # Your AWS instance public IP or domain
+          USER: ${{ secrets.AWS_USER }} # Typically "ubuntu" for Ubuntu instances
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }} # Private SSH key stored in GitHub Secrets
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+          # Transfer build folder to AWS instance (adjust the target path as needed)
+          scp -i key.pem -r build/* $USER@$HOST:/var/www/my-react-app/
+          # Optionally, you can add an SSH command to reload Nginx:
+          ssh -i key.pem $USER@$HOST "sudo systemctl reload nginx"
