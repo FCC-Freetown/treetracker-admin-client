@@ -31,11 +31,11 @@ jobs:
         run: npm run lint
         working-directory: ${{ env.project-directory }}
       - name: build client dev project
-        if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
+        if: github.event_name == 'push'
         run: npm run build:dev
         working-directory: ${{ env.project-directory }}
       - uses: actions/upload-artifact@v4
-        if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
+        if: github.event_name == 'push'
         with:
           name: client-bundle
           path: build-dev
