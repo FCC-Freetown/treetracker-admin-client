@@ -1,3 +1,10 @@
+## [1.136.2](https://github.com/FCC-Freetown/treetracker-admin-client/compare/v1.136.1...v1.136.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* ci ([467c461](https://github.com/FCC-Freetown/treetracker-admin-client/commit/467c4618954831be7274515f50021e891a090834))
+
 ## [1.136.1](https://github.com/FCC-Freetown/treetracker-admin-client/compare/v1.136.0...v1.136.1) (2025-02-28)
 
 
