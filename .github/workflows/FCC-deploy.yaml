@@ -23,15 +23,18 @@ jobs:
       - name: Build React App
         run: npm run build
 
+      - name: Add AWS host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.AWS_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to AWS Instance
         env:
-          HOST: ${{ secrets.AWS_HOST }} # Your AWS instance public IP or domain
-          USER: ${{ secrets.AWS_USER }} # Typically "ubuntu" for Ubuntu instances
-          SSH_KEY: ${{ secrets.AWS_SSH_KEY }} # Private SSH key stored in GitHub Secrets
+          HOST: ${{ secrets.AWS_HOST }} 
+          USER: ${{ secrets.AWS_USER }} 
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
         run: |
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
-          # Transfer build folder to AWS instance (adjust the target path as needed)
           scp -i key.pem -r build/* $USER@$HOST:/var/www/my-react-app/
-          # Optionally, you can add an SSH command to reload Nginx:
           ssh -i key.pem $USER@$HOST "sudo systemctl reload nginx"
