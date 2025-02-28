@@ -37,4 +37,4 @@ jobs:
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
           scp -i key.pem -r build/* $USER@$HOST:/var/www/my-react-app/
-          ssh -i key.pem $USER@$HOST "sudo systemctl reload nginx"
+          sudo systemctl restart nginx
